@@ -57,6 +57,7 @@ struct BT
 
 	// TODO: Exit every traversing function when the binary tree is empty.
 
+	static BT* Initialise(int Position);
 	void PreorderTraverse();
 	void InorderTraverse();
 	void PostorderTraverse();
@@ -246,6 +247,37 @@ BT::BT(char value)
 	root = new N;
 	root->l = root->r = nullptr;
 	root->value = value;
+}
+
+BT* BT::Initialise(int position)
+{
+	BT bt = BT();
+	BT* l = nullptr, * r = nullptr;
+
+	cout << "Please enter the node at " << position;
+	char ch;
+	cin >> ch;
+	bt.root->value = ch;
+
+	char YorN;
+
+	cout << "Do you want to create " << position << "'s left sub node? (Y/N): ";
+	cin >> YorN;
+	if (YorN == 'y' || YorN == 'Y')
+	{
+		l = Initialise(2 * position);
+		bt.root->l = l->root;
+	}
+
+	cout << "Do you want to create " << position << "'s right sub node? (Y/N): ";
+	cin >> YorN;
+	if (YorN == 'y' || YorN == 'Y')
+	{
+		r = Initialise(2 * position + 1);
+		bt.root->r = r->root;
+	}
+
+	return &bt;
 }
 
 void BT::PreorderTraverse()
