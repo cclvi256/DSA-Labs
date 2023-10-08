@@ -386,6 +386,7 @@ void BT::PostorderTraverse()
 	s.Push(root);
 	N* ptr = nullptr;
 	N* last = nullptr;
+	bool lastPop = false;
 
 	while (!s.IsEmpty())
 	{
@@ -396,12 +397,14 @@ void BT::PostorderTraverse()
 			cout << s.top->value->value << '\t';
 			s.Pop();
 			last = ptr;
+			lastPop = true;
 		}
-		else if (last == ptr->l || last == ptr->r)
+		else if (lastPop && (last == ptr->l || last == ptr->r))
 		{
 			cout << s.top->value->value << '\t';
 			s.Pop();
 			last = ptr;
+			lastPop = true;
 		}
 		else
 		{
@@ -414,6 +417,8 @@ void BT::PostorderTraverse()
 			{
 				s.Push(ptr->l);
 			}
+
+			lastPop = false;
 		}
 	}
 }
