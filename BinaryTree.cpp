@@ -75,6 +75,40 @@ struct BT
 
 int main(int argc, char** argv)
 {
+	N* root = BT::Initialise(1);
+	BT bt = BT(root);
+
+	cout << "Preorder traversal:" << endl;
+	cout << "\tNon-recursive: ";
+	bt.PreorderTraverse();
+	cout << "\tRecursive: ";
+	bt.RPreorderTraverse();
+
+	cout << "Inorder traversal:" << endl;
+	cout << "\tNon-recursive: ";
+	bt.InorderTraverse();
+	cout << "\tRecursive: ";
+	bt.RInorderTraverse();
+
+	cout << "Postorder traversal:" << endl;
+	cout << "\tNon-recursive: ";
+	bt.PostorderTraverse();
+	cout << "\tRecursive: ";
+	bt.RPostorderTraverse();
+
+	cout << "Level-order traversal:" << endl;
+	cout << "\tNon-recursive: ";
+	bt.LevelOrderTraverse();
+
+	cout << "This binary tree is ";
+	if (!(bt.IsComplete()))
+	{
+		cout << "not ";
+	}
+	cout << "a complete binary tree. " << endl;
+
+	cout << "The tree's width is " << bt.Width() << ". " << endl;
+
 	return 0;
 }
 
@@ -284,43 +318,65 @@ N* BT::Initialise(int position)
 
 void BT::PreorderTraverse()
 {
-	Stack<N*> s;
-	s.Push(root);
-	N* ptr = nullptr;
-
-	while (!s.IsEmpty())
+	if (root == nullptr)
 	{
-		ptr = s.top->value;
+		return;
+	}
 
-		cout << s.top->value->value << '\t';
-		s.Pop();
+	Stack<N*> s;
+	N* ptr = root;
 
-		if (ptr->r != nullptr)
+	while ((!s.IsEmpty()) || ptr != nullptr)
+	{
+		if (ptr != nullptr)
 		{
-			s.Push(ptr->r);
+			s.Push(ptr);
+			ptr = ptr->l;
 		}
-
-		if (ptr->l != nullptr)
+		else
 		{
-			s.Push(ptr->l);
+			ptr = s.top->value;
+			cout << ptr->value << '\t';
+			s.Pop();
+			ptr = ptr->r;
 		}
 	}
 }
 
 void BT::InorderTraverse()
 {
-	Stack<N*> s;
-	s.Push(root);
-	N* ptr = nullptr;
-
-	while (!s.IsEmpty())
+	if (root == nullptr)
 	{
-		ptr = s.top->value;
+		return;
+	}
+
+	Stack<N*> s;
+	N* ptr = root;
+
+	while ((!s.IsEmpty()) || ptr != nullptr)
+	{
+		if (ptr != nullptr)
+		{
+			cout << ptr->value << '\t';
+			s.Push(ptr);
+			ptr = ptr->l;
+		}
+		else
+		{
+			ptr = s.top->value;
+			s.Pop();
+			ptr = ptr->r;
+		}
 	}
 }
 
 void BT::PostorderTraverse()
 {
+	if (root == nullptr)
+	{
+		return;
+	}
+
 	Stack<N*> s;
 	s.Push(root);
 	N* ptr = nullptr;
@@ -359,6 +415,11 @@ void BT::PostorderTraverse()
 
 void BT::LevelOrderTraverse()
 {
+	if (root == nullptr)
+	{
+		return;
+	}
+
 	Queue<N*> q;
 	q.Push(root);
 	N* ptr = nullptr;
