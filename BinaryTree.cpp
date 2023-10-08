@@ -57,7 +57,7 @@ struct BT
 
 	// TODO: Exit every traversing function when the binary tree is empty.
 
-	static BT* Initialise(int Position);
+	static N* Initialise(int position);
 	void PreorderTraverse();
 	void InorderTraverse();
 	void PostorderTraverse();
@@ -65,8 +65,11 @@ struct BT
 	void RPreorderTraverse();
 	void RInorderTraverse();
 	void RPostorderTraverse();
+	int Height();
 	int Width();
 	bool IsComplete();
+	void HeightDetector(int position, int& deepest);
+	void WidthDetector(int position, int height, int* temp);
 };
 
 int main(int argc, char** argv)
@@ -249,35 +252,33 @@ BT::BT(char value)
 	root->value = value;
 }
 
-BT* BT::Initialise(int position)
+N* BT::Initialise(int position)
 {
-	BT bt = BT();
-	BT* l = nullptr, * r = nullptr;
+	N* n = new N;
 
-	cout << "Please enter the node at " << position;
+	cout << "Please enter the value at position " << position << " : ";
 	char ch;
 	cin >> ch;
-	bt.root->value = ch;
 
-	char YorN;
+	n->value = ch;
 
-	cout << "Do you want to create " << position << "'s left sub node? (Y/N): ";
-	cin >> YorN;
-	if (YorN == 'y' || YorN == 'Y')
+	char lyorn, ryorn;
+
+	cout << "Do you want a left sub node for it? (Y/N): ";
+	cin >> lyorn;
+	if (lyorn == 'y' || lyorn == 'Y')
 	{
-		l = Initialise(2 * position);
-		bt.root->l = l->root;
+		n->l = Initialise(2 * position);
 	}
 
-	cout << "Do you want to create " << position << "'s right sub node? (Y/N): ";
-	cin >> YorN;
-	if (YorN == 'y' || YorN == 'Y')
+	cout << "Do you want a right sub node for it? (Y/N): ";
+	cin >> ryorn;
+	if (ryorn == 'y' || ryorn == 'Y')
 	{
-		r = Initialise(2 * position + 1);
-		bt.root->r = r->root;
+		n->r = Initialise(2 * position + 1);
 	}
 
-	return &bt;
+	return n;
 }
 
 void BT::PreorderTraverse()
@@ -431,12 +432,76 @@ void BT::RPostorderTraverse()
 	cout << root->value;
 }
 
+int BT::Height()
+{
+	int deepest = 1, h = 0;
+	HeightDetector(1, deepest);
+	while (deepest)
+	{
+		deepest /= 2;
+		h++;
+	}
+	return h;
+}
+
 int BT::Width()
 {
-	return 0;
+	int h = Height();
+	int* arr = new int[h];
+	WidthDetector(1, h, arr);
+
+	int res = 0;
+
+	for (int i = 0; i < h; i++)
+	{
+		res = res > arr[i] ? res : arr[i];
+	}
+
+	return res;
 }
 
 bool BT::IsComplete()
 {
 	return false;
+}
+
+void BT::HeightDetector(int position, int& deepest)
+{
+	deepest = position > deepest ? position : deepest;
+
+	if (root->l != nullptr)
+	{
+		BT newBT = BT(root->l);
+		newBT.HeightDetector(position * 2, deepest);
+	}
+
+	if (root->r != nullptr)
+	{
+		BT newBT = BT(root->r);
+		newBT.HeightDetector(position * 2 + 1, deepest);
+	}
+}
+
+void BT::WidthDetector(int position, int height, int* temp)
+{
+	int positionCopy = position;
+	int depth = -1;
+	while (positionCopy)
+	{
+		positionCopy /= 2;
+		depth++;
+	}
+	temp[depth]++;
+
+	if (root->l != nullptr)
+	{
+		BT newBT = BT(root->l);
+		newBT.WidthDetector(position * 2, height, temp);
+	}
+
+	if (root->r != nullptr)
+	{
+		BT newBT = BT(root->r);
+		newBT.WidthDetector(position * 2 + 1, height, temp);
+	}
 }
