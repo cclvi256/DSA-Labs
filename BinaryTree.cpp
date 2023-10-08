@@ -68,6 +68,7 @@ struct BT
 	int Height();
 	int Width();
 	bool IsComplete();
+	void HeightDetector(int position, int worstLen, int* positionArr);
 	void HeightDetector(int position, int& deepest);
 	void WidthDetector(int position, int height, int* temp);
 };
@@ -462,7 +463,40 @@ int BT::Width()
 
 bool BT::IsComplete()
 {
-	return false;
+	int biggest;
+	HeightDetector(1, biggest);
+	int* arr = new int[biggest + 1];
+	HeightDetector(1, biggest + 1, arr);
+
+	for (int i = 1; i < biggest + 1; i++)
+	{
+		if (i - arr[i])
+		{
+			delete[] arr;
+			return false;
+		}
+	}
+
+	delete[] arr;
+
+	return true;
+}
+
+void BT::HeightDetector(int position, int worstLen, int* positionArr)
+{
+	positionArr[position] = position;
+
+	if (root->l != nullptr)
+	{
+		BT newBT = BT(root->l);
+		newBT.HeightDetector(position * 2, worstLen, positionArr);
+	}
+
+	if (root->r != nullptr)
+	{
+		BT newBT = BT(root->r);
+		newBT.HeightDetector(position * 2 + 1, worstLen, positionArr);
+	}
 }
 
 void BT::HeightDetector(int position, int& deepest)
