@@ -79,28 +79,28 @@ int main(int argc, char** argv)
 	BT bt = BT(root);
 
 	cout << "Preorder traversal:" << endl;
-	cout << "\tNon-recursive: ";
+	cout << "\tNon-recursive:\t";
 	bt.PreorderTraverse();
-	cout << "\tRecursive: ";
+	cout << "\n\t    Recursive:\t";
 	bt.RPreorderTraverse();
 
-	cout << "Inorder traversal:" << endl;
-	cout << "\tNon-recursive: ";
+	cout << "\nInorder traversal:" << endl;
+	cout << "\tNon-recursive:\t";
 	bt.InorderTraverse();
-	cout << "\tRecursive: ";
+	cout << "\n\t    Recursive:\t";
 	bt.RInorderTraverse();
 
-	cout << "Postorder traversal:" << endl;
-	cout << "\tNon-recursive: ";
+	cout << "\nPostorder traversal:" << endl;
+	cout << "\tNon-recursive:\t";
 	bt.PostorderTraverse();
-	cout << "\tRecursive: ";
+	cout << "\n\t    Recursive:\t";
 	bt.RPostorderTraverse();
 
-	cout << "Level-order traversal:" << endl;
-	cout << "\tNon-recursive: ";
+	cout << "\nLevel-order traversal:" << endl;
+	cout << "\tNon-recursive:\t";
 	bt.LevelOrderTraverse();
 
-	cout << "This binary tree is ";
+	cout << "\nThis binary tree is ";
 	if (!(bt.IsComplete()))
 	{
 		cout << "not ";
@@ -191,6 +191,7 @@ void Queue<T>::Push(T value)
 {
 	L<T>* newElem = new L<T>;
 	newElem->value = value;
+	newElem->next = nullptr;
 
 	if (!IsEmpty())
 	{
@@ -209,6 +210,7 @@ void Queue<T>::Push(T* value)
 {
 	L<T>* newElem = new L<T>;
 	newElem->value = *value;
+	newElem->next = nullptr;
 
 	if (!IsEmpty())
 	{
@@ -236,7 +238,7 @@ void Queue<T>::Pop()
 		cout << "Invalid operation: Poping an empty queue. " << endl;
 	}
 
-	if (IsEmpty())
+	if (front == nullptr)
 	{
 		rear = nullptr;
 	}
@@ -290,6 +292,8 @@ BT::BT(char value)
 N* BT::Initialise(int position)
 {
 	N* n = new N;
+	n->l = nullptr;
+	n->r = nullptr;
 
 	cout << "Please enter the value at position " << position << " : ";
 	char ch;
@@ -330,13 +334,13 @@ void BT::PreorderTraverse()
 	{
 		if (ptr != nullptr)
 		{
+			cout << ptr->value << '\t';
 			s.Push(ptr);
 			ptr = ptr->l;
 		}
 		else
 		{
 			ptr = s.top->value;
-			cout << ptr->value << '\t';
 			s.Pop();
 			ptr = ptr->r;
 		}
@@ -357,18 +361,19 @@ void BT::InorderTraverse()
 	{
 		if (ptr != nullptr)
 		{
-			cout << ptr->value << '\t';
 			s.Push(ptr);
 			ptr = ptr->l;
 		}
 		else
 		{
 			ptr = s.top->value;
+			cout << ptr->value << '\t';
 			s.Pop();
 			ptr = ptr->r;
 		}
 	}
 }
+
 
 void BT::PostorderTraverse()
 {
@@ -445,7 +450,7 @@ void BT::LevelOrderTraverse()
 
 void BT::RPreorderTraverse()
 {
-	cout << root->value;
+	cout << root->value << '\t';
 
 	if (root->l != nullptr)
 	{
@@ -468,7 +473,7 @@ void BT::RInorderTraverse()
 		newBT.RInorderTraverse();
 	}
 
-	cout << root->value;
+	cout << root->value << '\t';
 
 	if (root->r != nullptr)
 	{
@@ -491,7 +496,7 @@ void BT::RPostorderTraverse()
 		newBT.RPostorderTraverse();
 	}
 
-	cout << root->value;
+	cout << root->value << '\t';
 }
 
 int BT::Height()
