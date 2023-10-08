@@ -299,14 +299,14 @@ N* BT::Initialise(int position)
 
 	char lyorn, ryorn;
 
-	cout << "Do you want a left sub node for it? (Y/N): ";
+	cout << "Do you want a left sub node for node " << position << "? (Y/N): ";
 	cin >> lyorn;
 	if (lyorn == 'y' || lyorn == 'Y')
 	{
 		n->l = Initialise(2 * position);
 	}
 
-	cout << "Do you want a right sub node for it? (Y/N): ";
+	cout << "Do you want a right sub node for node " << position << "? (Y/N): ";
 	cin >> ryorn;
 	if (ryorn == 'y' || ryorn == 'Y')
 	{
