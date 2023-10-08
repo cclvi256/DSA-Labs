@@ -55,8 +55,6 @@ struct BT
 	BT(N* sub);
 	BT(char value);
 
-	// TODO: Exit every traversing function when the binary tree is empty.
-
 	static N* Initialise(int position);
 	void PreorderTraverse();
 	void InorderTraverse();
@@ -78,7 +76,7 @@ int main(int argc, char** argv)
 	N* root = BT::Initialise(1);
 	BT bt = BT(root);
 
-	cout << "Preorder traversal:" << endl;
+	cout << "\nPreorder traversal:" << endl;
 	cout << "\tNon-recursive:\t";
 	bt.PreorderTraverse();
 	cout << "\n\t    Recursive:\t";
@@ -520,14 +518,21 @@ int BT::Width()
 {
 	int h = Height();
 	int* arr = new int[h];
-	WidthDetector(1, h, arr);
-
 	int res = 0;
 
 	for (int i = 0; i < h; i++)
 	{
+		arr[i] = 0;
+	}
+
+	WidthDetector(1, h, arr);
+	
+	for (int i = 0; i < h; i++)
+	{
 		res = res > arr[i] ? res : arr[i];
 	}
+
+	delete[] arr;
 
 	return res;
 }
