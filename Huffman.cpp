@@ -5,6 +5,7 @@
 #include <vector>
 
 #define CAPACITY 95
+#define DEBUG
 
 struct CharInfo
 {
@@ -36,7 +37,7 @@ struct TreeNode
 
 	TreeNode();
 	TreeNode(char ch, CharInfo* dictionary);
-	TreeNode(TreeNode& sub1, TreeNode& sub2);
+	TreeNode(TreeNode* sub1, TreeNode* sub2);
 
 	void DictionaryFixing(CharInfo* dictionary);
 	void DictionaryFixing(CharInfo* dictionary, int depth, int position);
@@ -77,19 +78,6 @@ struct OBuffer
 	}
 };
 
-struct Heap
-{
-	TreeNode* root;
-	int capacity;
-	int currentIndex;
-
-	Heap(int capacity);
-
-	void Push(TreeNode& value);
-	void Push(TreeNode value);
-	void Pop();
-};
-
 void CountOccurrence(std::string filePath, CharInfo* countArray);
 TreeNode* HuffmanTreeConstruct(CharInfo* dictionary);
 void Compress(std::string sourceFilePath, std::string outputFilePath, CharInfo* dictionary);
@@ -102,6 +90,43 @@ void Decompress(std::string compressedFilePath, std::string outputFilePath, Tree
 
 int main(int argc, char** argv)
 {
+	std::string sampleFile;
+#ifndef DEBUG
+	std::cout << "Please enter the sample file for occurrence counting: ";
+	std::cin >> sampleFile;
+#else
+	sampleFile = "D:\\e.txt";
+#endif
+	CharInfo* dict = new CharInfo[CAPACITY];
+	CountOccurrence(sampleFile, dict);
+
+	TreeNode* root = HuffmanTreeConstruct(dict);
+
+	std::string sourceFile;
+	std::string codeFile;
+	std::string decompressedFile;
+#ifndef DEBUG
+	std::cout << "Please enter the file to be compressed: ";
+	std::cin >> sourceFile;
+#else
+	sourceFile = "D:\\s.txt";
+#endif
+#ifndef DEBUG
+	std::cout << "Please enter the file storing compressed code: ";
+	std::cin >> codeFile;
+#else
+	codeFile = "D:\\c.hcc";
+#endif
+#ifndef DEBUG
+	std::cout << "Please enter the target file path";
+	std::cin >> decompressedFile;
+#else
+	decompressedFile = "D:\\d.txt";
+#endif
+
+	Compress(sourceFile, codeFile, dict);
+	Decompress(codeFile, decompressedFile, root);
+
 	return 0;
 }
 
@@ -139,8 +164,6 @@ void CharInfo::AttachCode(int huffmanCode, char huffmanCodeBits)
 	this->huffmanCodeBits = huffmanCodeBits;
 }
 
-/**************************************************************************************/
-
 TreeElem::TreeElem()
 	: ch(0)
 	, isLeaf(true)
@@ -165,14 +188,14 @@ TreeNode::TreeNode(char ch, CharInfo* dictionary)
 	value.totalCount = dictionary[ch - 32].count;
 }
 
-TreeNode::TreeNode(TreeNode& sub1, TreeNode& sub2)
+TreeNode::TreeNode(TreeNode* sub1, TreeNode* sub2)
 	: value(TreeElem())
-	, l(&sub1)
-	, r(&sub2)
+	, l(sub1)
+	, r(sub2)
 {
 	value.ch = 0;
 	value.isLeaf = false;
-	value.totalCount = sub1.value.totalCount + sub2.value.totalCount;
+	value.totalCount = sub1->value.totalCount + sub2->value.totalCount;
 }
 
 void TreeNode::DictionaryFixing(CharInfo* dictionary)
@@ -198,8 +221,6 @@ TreeNode::operator<(const TreeNode& operand2) const
 {
 	return value.totalCount < operand2.value.totalCount;
 }
-
-/**************************************************************************************/
 
 IBuffer::IBuffer(std::string filePath)
 	: buffer(0)
@@ -238,8 +259,11 @@ bool IBuffer::GetBit()
 		{
 			std::cout << "Out of file range!" << std::endl;
 		}
-		remaining = 8;
-		ifs.read(&buffer, 1);
+		else
+		{
+			remaining = 8;
+			ifs.read(&buffer, 1);
+		}
 	}
 
 	return rv;
@@ -251,12 +275,10 @@ bool IBuffer::PeekBit()
 	return mask & buffer ? true : false;
 }
 
-/**************************************************************************************/
-
 OBuffer::OBuffer(std::string filePath)
 	: buffer(0)
 	, remaining(0)
-	, ofs(filePath, std::ios::binary | std::ios::app)
+	, ofs(filePath, std::ios::binary | std::ios::out)
 {
 	if (!ofs.is_open())
 	{
@@ -278,6 +300,7 @@ void OBuffer::PutBit(bool bit)
 	{
 		ofs.write(&buffer, 1);
 		remaining = 0;
+		buffer = 0;
 	}
 }
 
@@ -285,7 +308,7 @@ void OBuffer::PutBit(int bits, int bitNum)
 {
 	for (int i = 0; i < bitNum; i++)
 	{
-		PutBit(bits & (1 << (bitNum - 1)));
+		PutBit(bits & (1 << (bitNum - i - 1)));
 	}
 }
 
@@ -296,104 +319,6 @@ void OBuffer::FixEnd()
 		PutBit(false);
 	}
 }
-
-/**************************************************************************************/
-
-Heap::Heap(int capacity)
-	: root(new TreeNode[CAPACITY + 1])
-	, capacity(CAPACITY + 1)
-	, currentIndex(0)
-{
-}
-
-void Heap::Push(TreeNode& value)
-{
-	currentIndex++;
-	root[currentIndex] = value;
-
-	TreeNode temp;
-
-	int copy = currentIndex;
-	while (copy > 1)
-	{
-		if (root[copy] < root[copy << 1])
-		{
-			temp = root[copy];
-			root[copy] = root[copy << 1];
-			root[copy << 1] = temp;
-		}
-	}
-}
-
-void Heap::Push(TreeNode value)
-{
-	currentIndex++;
-	root[currentIndex] = value;
-
-	TreeNode temp;
-
-	int copy = currentIndex;
-	while (copy > 1)
-	{
-		if (root[copy] < root[copy << 1])
-		{
-			temp = root[copy];
-			root[copy] = root[copy << 1];
-			root[copy << 1] = temp;
-		}
-	}
-}
-
-void Heap::Pop()
-{
-	TreeNode* last = root + currentIndex;
-	currentIndex--;
-
-	TreeNode* temp = nullptr;
-	int location = 1;
-
-	while (location * 2 < currentIndex)
-	{
-		if (root[location * 2] < root[location * 2 + 1])
-		{
-			if (*last < root[location * 2])
-			{
-				root[location] = *last;
-				break;
-			}
-			else
-			{
-				root[location] = root[location * 2];
-				location *= 2;
-			}
-		}
-		else
-		{
-			if (*last < root[location * 2 + 1])
-			{
-				root[location] = *last;
-				break;
-			}
-			else
-			{
-				root[location] = root[location * 2 + 1];
-				location *= 2;
-				location++;
-			}
-		}
-	}
-
-	if (2 * location == currentIndex)
-	{
-		root[location * 2 + 1] = *last;
-	}
-	else if (2 * location > currentIndex)
-	{
-		root[location * 2] = *last;
-	}
-}
-
-/**************************************************************************************/
 
 void CountOccurrence(std::string filePath, CharInfo* countArray)
 {
@@ -418,32 +343,72 @@ void CountOccurrence(std::string filePath, CharInfo* countArray)
 		ch = ifs.get();
 		countArray[ch - 32].count++;
 	}
+
+	ifs.close();
 }
 
 TreeNode* HuffmanTreeConstruct(CharInfo* dictionary)
 {
-	Heap heap = Heap(CAPACITY);
+	TreeNode* arr[CAPACITY];
+	int remaining = CAPACITY;
 
 	for (int i = 0; i < CAPACITY; i++)
 	{
-		heap.Push(TreeNode(i + 32, dictionary));
+		arr[i] = new TreeNode(i + 32, dictionary);
 	}
 
-	while (heap.currentIndex > 1)
+	TreeNode* temp = nullptr;
+
+	while (remaining > 1)
 	{
-		TreeNode temp1, temp2;
-		temp1 = heap.root[1];
-		heap.Pop();
-		temp2 = heap.root[1];
-		heap.Pop();
+		for (int i = 0; i < CAPACITY - 1; i++)
+		{
+			for (int j = CAPACITY - 2; j >= i; j--)
+			{
+				if (arr[j + 1] == nullptr)
+				{
+					continue;
+				}
+				else if (arr[j] == nullptr)
+				{
+					temp = arr[j];
+					arr[j] = arr[j + 1];
+					arr[j + 1] = temp;
+				}
+				else if (arr[j]->value.totalCount > arr[j + 1]->value.totalCount)
+				{
+					temp = arr[j];
+					arr[j] = arr[j + 1];
+					arr[j + 1] = temp;
+				}
+			}
+		}
 
-		heap.Push(TreeNode(temp1, temp2));
+		TreeNode* combined = new TreeNode(arr[0], arr[1]);
+		arr[0] = combined;
+		arr[1] = nullptr;
+		remaining--;
 	}
 
-	TreeNode* huffmanTreeRoot = new TreeNode(heap.root[1]);
-	huffmanTreeRoot->DictionaryFixing(dictionary);
+	TreeNode* res = arr[0];
 
-	return huffmanTreeRoot;
+	res->DictionaryFixing(dictionary);
+
+#ifdef DEBUG
+	for (int i = 0; i < CAPACITY; i++)
+	{
+		std::cout << dictionary[i].ch << '\t';
+		std::cout << (int)(dictionary[i].huffmanCodeBits) << '\t';
+		std::cout << dictionary[i].count << '\t';
+		for (int mask = 1 << (dictionary[i].huffmanCodeBits - 1); mask > 0; mask >>= 1)
+		{
+			std::cout << ((mask & dictionary[i].huffmanCode) ? '1' : '0');
+		}
+		std::cout << std::endl;
+	}
+#endif
+
+	return res;
 }
 
 void Compress(std::string sourceFilePath, std::string outputFilePath, CharInfo* dictionary)
@@ -457,16 +422,16 @@ void Compress(std::string sourceFilePath, std::string outputFilePath, CharInfo* 
 
 	while (!ifs.eof())
 	{
-		ifs.read(&ch, 1);
+		ch = ifs.get();
 		totalBits += dictionary[ch - 32].huffmanCodeBits;
 		ob.PutBit(dictionary[ch - 32].huffmanCode, dictionary[ch - 32].huffmanCodeBits);
 	}
 	ifs.close();
+	ob.Destroy();
 
 	std::ofstream ofs(outputFilePath, std::ios::app | std::ios::binary);
 	ofs.write((char*)&totalBits, 4);
 	ofs.close();
-	ob.Destroy();
 }
 
 void Decompress(std::string compressedFilePath, TreeNode* root)
@@ -475,7 +440,7 @@ void Decompress(std::string compressedFilePath, TreeNode* root)
 
 	int totalBits;
 	detectingIfs.seekg(-4, std::ios::end);
-	detectingIfs.read((char*)&totalBits, 4);
+	detectingIfs.read((char*)(&totalBits), 4);
 	detectingIfs.close();
 
 	IBuffer ib(compressedFilePath);
