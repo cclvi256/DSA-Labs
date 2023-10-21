@@ -5,7 +5,6 @@
 #include <vector>
 
 #define CAPACITY 95
-#define DEBUG
 
 struct CharInfo
 {
@@ -84,10 +83,6 @@ void Compress(std::string sourceFilePath, std::string outputFilePath, CharInfo* 
 void Decompress(std::string compressedFilePath, TreeNode* root);
 void Decompress(std::string compressedFilePath, std::string outputFilePath, TreeNode* root);
 
-/**************************************************************************************/
-/**************************************************************************************/
-/**************************************************************************************/
-
 int main(int argc, char** argv)
 {
 	std::string sampleFile;
@@ -118,7 +113,7 @@ int main(int argc, char** argv)
 	codeFile = "D:\\c.hcc";
 #endif
 #ifndef DEBUG
-	std::cout << "Please enter the target file path";
+	std::cout << "Please enter the target file path: ";
 	std::cin >> decompressedFile;
 #else
 	decompressedFile = "D:\\d.txt";
@@ -129,10 +124,6 @@ int main(int argc, char** argv)
 
 	return 0;
 }
-
-/**************************************************************************************/
-/**************************************************************************************/
-/**************************************************************************************/
 
 CharInfo::CharInfo()
 	: ch(0)
