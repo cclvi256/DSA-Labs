@@ -1,10 +1,42 @@
 #include "Graph.h"
 
+#include <iostream>
+#include <string>
+
 Graph::Graph()
+{
+	std::cout << "Please enter the order of your graph: ";
+	int order;
+	std::cin >> order;
+
+	this->order = order;
+	this->visited = new bool[order];
+	this->adjList = new VNode[order];
+	this->adjMat = new int[order * order];
+
+	// TODO: Initialise 3 arrays.
+
+	std::cout << "Please enter each edges of your graph. ";
+	std::cout << std::endl;
+	std::cout << "Use commas to split edges, and end with a '#'. ";
+	std::cout << std::endl;
+	std::cout << "Example: 1 3, 4 6, 2 3, 3 6#";
+	std::cout << std::endl;
+
+	while (std::cin.peek() != '#')
+	{
+		int vertex1, vertex2;
+		std::cin >> vertex1 >> vertex2;
+
+		// TODO: Add an edge in both adjacency list and adjacency matrix.
+	}
+}
+
+Graph::Graph(int order)
 {
 }
 
-Graph::Graph(int vertexNum, int* adjMat)
+Graph::Graph(int order, int* adjMat)
 {
 }
 
@@ -12,61 +44,6 @@ Graph::Graph(VNode* adjList)
 {
 }
 
-Graph::Graph(int vertecNum, VNode* adjList)
+Graph::Graph(int order, VNode* adjList)
 {
-}
-
-void Graph::Print()
-{
-}
-
-void Graph::BFS(char mode, int vertexNum, int* adjMat)
-{
-}
-
-void Graph::BFS(char mode, int vertexNum, VNode* adjList)
-{
-}
-
-void Graph::BFS(char mode, VNode* adjList)
-{
-}
-
-void Graph::DFS(char mode, int vertexNum, int* adjMat)
-{
-}
-
-void Graph::DFS(char mode, int vertexNum, VNode* adjList)
-{
-}
-
-void Graph::DFS(char mode, VNode* adjList)
-{
-}
-
-void Graph::DFS_R(char mode, int vertexNum, int* adjMat)
-{
-}
-
-void Graph::DFS_R(char mode, int vertexNum, VNode* adjList)
-{
-}
-
-void Graph::DFS_R(char mode, VNode* adjList)
-{
-}
-
-int* Graph::Degree(char mode, int vertexNum, VNode* adjList)
-{
-	return nullptr;
-}
-
-int* Graph::Degree(char mode, VNode* adjList)
-{
-	return nullptr;
-}
-
-int Graph::CountVertex(VNode* adjList)
-{
-	return 0;
 }
