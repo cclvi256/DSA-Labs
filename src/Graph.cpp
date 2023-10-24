@@ -184,6 +184,10 @@ Graph::Graph(int order, VNode* adjList)
 	}
 }
 
+Graph::~Graph()
+{
+}
+
 void Graph::Reset()
 {
 	for (int i = 0; i < this->order; i++)

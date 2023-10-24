@@ -34,7 +34,6 @@
 
 # CMake files
 build/
-!CMakeLists.txt
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
