@@ -37,10 +37,6 @@ struct Graph
 	Graph(int order, int* adjMat);
 
 	/// @brief Construct a graph with an adjacency list.
-	/// @param adjList 
-	Graph(VNode* adjList);
-
-	/// @brief Construct a graph with an adjacency list.
 	/// @param order 
 	/// @param adjList 
 	Graph(int order, VNode* adjList);

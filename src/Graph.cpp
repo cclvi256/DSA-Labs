@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <cctype>
+#include <cstdlib>
 
 Graph::Graph()
 {
@@ -78,18 +79,71 @@ Graph::Graph()
 
 Graph::Graph(int order)
 {
+	this->order = order;
+
+	// Avoiding unexcepted visit to empty graphs.
+	if (order == 0)
+	{
+		this->adjList = nullptr;
+		this->adjMat = nullptr;
+		this->visited = nullptr;
+	}
+
+	// Allocating memory and initialise.
+	else
+	{
+		this->visited = new bool[order];
+		this->adjList = new VNode[order];
+		this->adjMat = new int[order * order];
+
+		for (int i = 0; i < order; i++)
+		{
+			this->adjList[i].sn = i;
+			this->adjList[i].next = nullptr;
+		}
+
+		for (int i = 0; i < order * order; i++)
+		{
+			this->adjMat[i] = 0;
+		}
+
+		this->Reset();
+	}
 }
 
 Graph::Graph(int order, int* adjMat)
 {
-}
+	// Check if the adjacency matrix legal.
+	for (int i = 0; i < order; i++)
+	{
+		for (int j = i; j < order; j++)
+		{
+			if (i == j && this->adjMat[i * order + j] != 0)
+			{
+				std::cout << "All items on the diagonal must be 0!" << std::endl;
+				exit(1);
+			}
 
-Graph::Graph(VNode* adjList)
-{
+			if (this->adjMat[i * order + j] != this->adjMat[j * order + i])
+			{
+				std::cout << "This matrix is not symmetrical!" << std::endl;
+			}
+		}
+	}
+
+	// Common inserting from head.
+	for (int i = 0; i < order; i++)
+	{
+		for (int j = 0; j < order; j++)
+		{
+			this->adjList[i].next = new VNode(j, this->adjList[i].next);
+		}
+	}
 }
 
 Graph::Graph(int order, VNode* adjList)
 {
+
 }
 
 void Graph::Reset()
