@@ -56,7 +56,8 @@ struct Graph
 
 	/// @brief Fix the fields of an object.
 	/// @param mode In which mode the graph is constructed.
-	void Init(char mode);
+	// Maybe unnecessary.
+	// void Init(char mode);
 
 	/// @brief Get the degree of each vertex.
 	/// @return The array of degrees of each vertex.
