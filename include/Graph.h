@@ -2,6 +2,10 @@ struct VNode
 {
 	int sn;
 	VNode* next;
+
+	VNode();
+	VNode(int sn);
+	VNode(int sn, VNode* next);
 };
 
 /// @brief The 1st vertex is numbered 0!
