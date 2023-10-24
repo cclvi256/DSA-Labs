@@ -1,8 +1,4 @@
-﻿#include <cstdlib>
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <vector>
+﻿#include "Huffman.h"
 
 #define CAPACITY 95
 
