@@ -1,3 +1,7 @@
 *.out
 .gitignore
 .gitattributes
+CMakeFiles/
+*.cmake
+CMakeCache.txt
+Makefile
