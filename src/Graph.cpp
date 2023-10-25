@@ -4,6 +4,8 @@
 #include <string>
 #include <cctype>
 #include <cstdlib>
+#include <stack>
+#include <queue>
 
 Graph::Graph()
 {
@@ -218,6 +220,24 @@ int* Graph::Degree()
 
 	return rv;
 }
+
+/*************************************************************************************/
+
+void Graph::BFS(int start)
+{
+}
+
+int* Graph::BFS_Numbering(int start)
+{
+	return nullptr;
+}
+
+int* Graph::BF_SpanTree(int start)
+{
+	return nullptr;
+}
+
+/*************************************************************************************/
 
 VNode::VNode()
 {
