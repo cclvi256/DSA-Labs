@@ -111,6 +111,15 @@ Graph::Graph(int order)
 
 Graph::Graph(int order, int* adjMat)
 {
+	this->order = order;
+
+	// Initialise
+	this->adjList = new VNode[this->order];
+	for (int i = 0; i < this->order; i++)
+	{
+		this->adjList[i].next = nullptr;
+	}
+
 	// Check if the adjacency matrix argument legal.
 	for (int i = 0; i < order; i++)
 	{
@@ -138,15 +147,25 @@ Graph::Graph(int order, int* adjMat)
 	{
 		for (int j = 0; j < order; j++)
 		{
-			this->adjList[i].next = new VNode(j, this->adjList[i].next);
+			VNode* copy = this->adjList[i].next;
+			this->adjList[i].next = new VNode(j, copy);
 		}
 	}
 }
 
 Graph::Graph(int order, VNode* adjList)
 {
+	this->order = order;
+
 	// Direct the adjList field.
 	this->adjList = adjList;
+
+	// Initialise
+	this->adjMat = new int[this->order * this->order];
+	for (int i = 0; i < this->order * this->order; i++)
+	{
+		this->adjMat[i] = 0;
+	}
 
 	// Fill the adjMat field.
 	for (int i = 0; i < order; i++)
@@ -154,9 +173,9 @@ Graph::Graph(int order, VNode* adjList)
 		VNode* copy = this->adjList[i].next;
 		while (copy != nullptr)
 		{
-			copy = copy->next;
 			// Unsymmetrical input, in avoid of illegal adjacency list.
 			this->adjMat[i * order + copy->sn] = 1;
+			copy = copy->next;
 		}
 	}
 
