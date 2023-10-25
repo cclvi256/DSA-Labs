@@ -20,13 +20,13 @@ Graph::Graph()
 	{
 		this->adjList = nullptr;
 		this->adjMat = nullptr;
-		this->visited = nullptr;
+
+		std::cout << "WARNING: You are constructing a zero graph" << std::endl;
 	}
 
 	// Allocating memory and initialise.
 	else
 	{
-		this->visited = new bool[order];
 		this->adjList = new VNode[order];
 		this->adjMat = new int[order * order];
 
@@ -40,8 +40,6 @@ Graph::Graph()
 		{
 			this->adjMat[i] = 0;
 		}
-
-		this->Reset();
 	}
 
 	std::cout << "Please enter each edges of your graph. ";
@@ -77,6 +75,8 @@ Graph::Graph()
 			std::cout << "Invalid input, Please check your input." << std::endl;
 		}
 	}
+
+	std::cout << "Graph successfully constructed." << std::endl;
 }
 
 Graph::Graph(int order)
@@ -88,13 +88,11 @@ Graph::Graph(int order)
 	{
 		this->adjList = nullptr;
 		this->adjMat = nullptr;
-		this->visited = nullptr;
 	}
 
 	// Allocating memory and initialise.
 	else
 	{
-		this->visited = new bool[order];
 		this->adjList = new VNode[order];
 		this->adjMat = new int[order * order];
 
@@ -108,8 +106,6 @@ Graph::Graph(int order)
 		{
 			this->adjMat[i] = 0;
 		}
-
-		this->Reset();
 	}
 }
 
@@ -190,19 +186,6 @@ Graph::~Graph()
 {
 }
 
-void Graph::Reset()
-{
-	for (int i = 0; i < this->order; i++)
-	{
-		this->visited[i] = false;
-	}
-}
-
-// Maybe this method is no longer necessary.
-// void Graph::Init(char mode)
-// {
-// }
-
 int* Graph::Degree()
 {
 	int* rv = new int[this->order];
@@ -221,23 +204,194 @@ int* Graph::Degree()
 	return rv;
 }
 
-/*************************************************************************************/
-
-void Graph::BFS(int start)
+int* Graph::BFS_Numbering(int start, char mode)
 {
+	std::queue<int> q;
+
+	// Optimise: one bit for a true or false.
+	bool* visited = new bool[this->order];
+	int* rv = new int[this->order];
+
+	// Initialise array.
+	for (int i = 0; i < this->order; i++)
+	{
+		visited[i] = false;
+		rv[i] = 0;
+	}
+
+	q.push(start);
+	int counter = 0;
+
+	while (!q.empty())
+	{
+		if (mode = 'm')
+		{
+			VNode* copy = this->adjList[q.front()].next;
+			while (copy != nullptr)
+			{
+				q.push(copy->sn);
+				visited[copy->sn] = true;
+				copy = copy->next;
+			}
+		}
+		else if (mode = 'l')
+		{
+			for (int i = 0; i < this->order; i++)
+			{
+				int base = this->order * q.front();
+				if (base + i == 1)
+				{
+					q.push(i);
+					visited[i] = true;
+				}
+			}
+		}
+
+		counter++;
+		rv[q.front()] = counter;
+		q.pop();
+	}
+
+	return rv;
 }
 
-int* Graph::BFS_Numbering(int start)
+int* Graph::DFS_Numbering(int start, char mode)
 {
-	return nullptr;
+	std::stack<int> s;
+
+	// Optimise: one bit for a true or false.
+	bool* visited = new bool[this->order];
+	int* rv = new int[this->order];
+
+	// Initialise array.
+	for (int i = 0; i < this->order; i++)
+	{
+		visited[i] = false;
+		rv[i] = 0;
+	}
+
+	s.push(start);
+	int counter = 0;
+
+	while (!s.empty())
+	{
+		if (mode = 'm')
+		{
+			VNode* copy = this->adjList[s.top()].next;
+			while (copy != nullptr)
+			{
+				s.push(copy->sn);
+				visited[copy->sn] = true;
+				copy = copy->next;
+			}
+		}
+		else if (mode = 'l')
+		{
+			for (int i = 0; i < this->order; i++)
+			{
+				int base = this->order * s.top();
+				if (base + i == 1)
+				{
+					s.push(i);
+					visited[i] = true;
+				}
+			}
+		}
+
+		counter++;
+		rv[s.top()] = counter;
+		s.pop();
+	}
+
+	return rv;
 }
 
-int* Graph::BF_SpanTree(int start)
+void Graph::DFS_R_Numbering(int start, int* arr, char mode)
 {
-	return nullptr;
+	bool* visited = new bool[this->order];
+	for (int i = 0; i < this->order; i++)
+	{
+		arr[i] = 0;
+		visited[i] = false;
+	}
+
+	DFS_R_Numbering(start, arr, visited, mode);
 }
 
-/*************************************************************************************/
+void Graph::DFS_R_Numbering(int start, int* arr, bool* visited, char mode)
+{
+
+
+	if (mode = 'm')
+	{
+		VNode* copy = this->adjList[start].next;
+		visited[start] = true;
+
+		while (copy != nullptr)
+		{
+			if (!visited[copy->sn])
+			{
+				DFS_R_Numbering(copy->sn, arr, visited, mode);
+			}
+			copy = copy->next;
+		}
+	}
+	else if (mode = 'l')
+	{
+		int base = this->order * start;
+		visited[start] = true;
+
+		for (int i = 0; i < this->order; i++)
+		{
+			if (!visited[i])
+			{
+				DFS_R_Numbering(i, arr, visited, mode);
+			}
+		}
+	}
+
+}
+
+void Graph::Print()
+{
+	bool first = true;
+	std::cout << "V = {";
+	for (int i = 0; i < this->order; i++)
+	{
+		if (first)
+		{
+			first = false;
+		}
+		else
+		{
+			std::cout << ", ";
+		}
+		std::cout << i;
+	}
+	std::cout << "};" << std::endl;
+
+	first = true;
+	std::cout << "E = {";
+	for (int i = 0; i < this->order; i++)
+	{
+		for (int j = i + 1; j < this->order; j++)
+		{
+			if (this->adjMat[i * order + j] == 1)
+			{
+				if (first)
+				{
+					first = false;
+				}
+				else
+				{
+					std::cout << ", ";
+				}
+				std::cout << "(" << i << ", " << j << ")";
+			}
+		}
+	}
+	std::cout << "}" << std::endl;
+}
 
 VNode::VNode()
 {

@@ -16,7 +16,6 @@ struct Graph
 	/**********/
 
 	int order;
-	bool* visited;
 	int* adjMat;	// This matrix will be horizental numbered.
 	VNode* adjList;
 
@@ -51,9 +50,6 @@ struct Graph
 	/* Methods */
 	/***********/
 
-	/// @brief Reset the record of field Graph::visited.
-	void Reset();
-
 	/// @brief Fix the fields of an object.
 	/// @param mode In which mode the graph is constructed.
 	// Maybe unnecessary.
@@ -63,45 +59,31 @@ struct Graph
 	/// @return The array of degrees of each vertex.
 	int* Degree();
 
-	/// @brief Print BFS traversal seires.
-	/// @param start From which node does the traversal start.
-	void BFS(int start);
-
 	/// @brief Get BFS numbering series.
 	/// @param start From which node does the numbering start.
+	/// @param mode From adjacency list or adjacency matrix?
 	/// @return 
-	int* BFS_Numbering(int start);
-
-	/// @brief Span a tree from the graph with BFS.
-	/// @param start From which node to span the tree.
-	/// @return 
-	int* BF_SpanTree(int start);
-
-	/// @brief Print DFS traversal seires.
-	/// @param start From which node does the traversal start.
-	void DFS(int start);
+	int* BFS_Numbering(int start, char mode);
 
 	/// @brief Get DFS numbering series.
 	/// @param start From which node does the numbering start.
+	/// @param mode From adjacency list or adjacency matrix?
 	/// @return 
-	int* DFS_Numbering(int start);
-
-	/// @brief Span a tree from the graph with DFS.
-	/// @param start From which node to span the tree.
-	/// @return 
-	int* DF_SpanTree(int start);
-
-	/// @brief Print DFS traversal seires recursively.
-	/// @param start From which node does the traversal start.
-	void DFS_R(int start);
+	int* DFS_Numbering(int start, char mode);
 
 	/// @brief Get DFS numbering series recursively.
 	/// @param start From which node does the numbering start.
+	/// @param mode From adjacency list or adjacency matrix?
 	/// @return 
-	int* DFS_R_Numbering(int start);
+	void DFS_R_Numbering(int start, int* arr, char mode);
 
-	/// @brief Span a tree from the graph with recursive DFS.
-	/// @param start From which node to span the tree.
-	/// @return 
-	int* DF_R_SpanTree(int start);
+	/// @brief Actually recursive function.
+	/// @param start 
+	/// @param arr 
+	/// @param visited 
+	/// @param mode From adjacency list or adjacency matrix?
+	void DFS_R_Numbering(int start, int* arr, bool* visited, char mode);
+
+	/// @brief Print the graph as vertex and edge collections.
+	void Print();
 };
