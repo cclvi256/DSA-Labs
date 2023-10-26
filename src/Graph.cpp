@@ -73,6 +73,7 @@ Graph::Graph()
 		else if (std::cin.peek() != '#')
 		{
 			std::cout << "Invalid input, Please check your input." << std::endl;
+			exit(1);
 		}
 	}
 
@@ -239,26 +240,30 @@ int* Graph::BFS_Numbering(int start, char mode)
 	}
 
 	q.push(start);
+	visited[start] = true;
 	int counter = 0;
 
 	while (!q.empty())
 	{
-		if (mode = 'm')
+		if (mode == 'l')
 		{
 			VNode* copy = this->adjList[q.front()].next;
 			while (copy != nullptr)
 			{
-				q.push(copy->sn);
-				visited[copy->sn] = true;
+				if (!visited[copy->sn])
+				{
+					q.push(copy->sn);
+					visited[copy->sn] = true;
+				}
 				copy = copy->next;
 			}
 		}
-		else if (mode = 'l')
+		else if (mode == 'm')
 		{
 			for (int i = 0; i < this->order; i++)
 			{
 				int base = this->order * q.front();
-				if (base + i == 1)
+				if (this->adjMat[base + i] == 1 && !visited[i])
 				{
 					q.push(i);
 					visited[i] = true;
@@ -290,36 +295,44 @@ int* Graph::DFS_Numbering(int start, char mode)
 	}
 
 	s.push(start);
-	int counter = 0;
+	visited[start] = true;
+	int counter = 1;
+	rv[start] = 1;
 
 	while (!s.empty())
 	{
-		if (mode = 'm')
+		int topCopy = s.top();
+		s.pop();
+
+		if (mode == 'l')
 		{
-			VNode* copy = this->adjList[s.top()].next;
+			VNode* copy = this->adjList[topCopy].next;
 			while (copy != nullptr)
 			{
-				s.push(copy->sn);
-				visited[copy->sn] = true;
+				if (!visited[copy->sn])
+				{
+					counter++;
+					rv[copy->sn] = counter;
+					s.push(copy->sn);
+					visited[copy->sn] = true;
+				}
 				copy = copy->next;
 			}
 		}
-		else if (mode = 'l')
+		else if (mode == 'm')
 		{
 			for (int i = 0; i < this->order; i++)
 			{
-				int base = this->order * s.top();
-				if (base + i == 1)
+				int base = this->order * topCopy;
+				if (this->adjMat[base + i] == 1 && !visited[i])
 				{
+					counter++;
+					rv[i] = counter;
 					s.push(i);
 					visited[i] = true;
 				}
 			}
 		}
-
-		counter++;
-		rv[s.top()] = counter;
-		s.pop();
 	}
 
 	return rv;
@@ -334,14 +347,17 @@ void Graph::DFS_R_Numbering(int start, int* arr, char mode)
 		visited[i] = false;
 	}
 
-	DFS_R_Numbering(start, arr, visited, mode);
+	int i = 0;
+
+	DFS_R_Numbering(start, arr, visited, mode, i);
 }
 
-void Graph::DFS_R_Numbering(int start, int* arr, bool* visited, char mode)
+void Graph::DFS_R_Numbering(int start, int* arr, bool* visited, char mode, int& counter)
 {
+	counter++;
+	arr[start] = counter;
 
-
-	if (mode = 'm')
+	if (mode == 'l')
 	{
 		VNode* copy = this->adjList[start].next;
 		visited[start] = true;
@@ -350,12 +366,12 @@ void Graph::DFS_R_Numbering(int start, int* arr, bool* visited, char mode)
 		{
 			if (!visited[copy->sn])
 			{
-				DFS_R_Numbering(copy->sn, arr, visited, mode);
+				DFS_R_Numbering(copy->sn, arr, visited, mode, counter);
 			}
 			copy = copy->next;
 		}
 	}
-	else if (mode = 'l')
+	else if (mode == 'm')
 	{
 		int base = this->order * start;
 		visited[start] = true;
@@ -364,11 +380,10 @@ void Graph::DFS_R_Numbering(int start, int* arr, bool* visited, char mode)
 		{
 			if (!visited[i])
 			{
-				DFS_R_Numbering(i, arr, visited, mode);
+				DFS_R_Numbering(i, arr, visited, mode, counter);
 			}
 		}
 	}
-
 }
 
 void Graph::Print()

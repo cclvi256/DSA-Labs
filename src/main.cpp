@@ -19,33 +19,51 @@ int main(int argc, char** argv)
 
 	/* All the functions above is debugged. */
 
-	int* arr = new int[g.order];
+	int* arr = nullptr;
+
+	std::cout << "BFS numbering results: " << std::endl;
 
 	arr = g.BFS_Numbering(0, 'm');
-	std::cout << "BFS numbering result(from adjacency matrix): ";
-	std::cout << std::endl;
+	std::cout << "\tfrom adjacency matrix: ";
+	PrintArray(arr, g.order);
 
 	arr = g.BFS_Numbering(0, 'l');
-	std::cout << "BFS numbering result(from adjacency list): ";
-	std::cout << std::endl;
+	std::cout << "\tfrom adjacency list: ";
+	PrintArray(arr, g.order);
+
+	std::cout << std::endl << "Non-recursive DFS numbering results: " << std::endl;
 
 	arr = g.DFS_Numbering(0, 'm');
 	std::cout << "DFS numbering result(from adjacency matrix): ";
-	std::cout << std::endl;
+	PrintArray(arr, g.order);
 
 	arr = g.DFS_Numbering(0, 'l');
 	std::cout << "DFS numbering result(from adjacency list): ";
-	std::cout << std::endl;
+	PrintArray(arr, g.order);
+
+	std::cout << std::endl << "Recursive DFS numbering results: " << std::endl;
 
 	g.DFS_R_Numbering(0, arr, 'm');
 	std::cout << "DFS numbering result(from adjacency matrix): ";
-	std::cout << std::endl;
+	PrintArray(arr, g.order);
 
 	g.DFS_R_Numbering(0, arr, 'l');
 	std::cout << "DFS numbering result(from adjacency list): ";
-	std::cout << std::endl;
+	PrintArray(arr, g.order);
 
+	std::cout << std::endl << "Degree: ";
 	arr = g.Degree();
+	PrintArray(arr, g.order);
 
 	return 0;
+}
+
+void PrintArray(int* arr, int len)
+{
+	for (int i = 0; i < len; i++)
+	{
+		std::cout << ' ' << arr[i];
+	}
+
+	std::cout << std::endl;
 }

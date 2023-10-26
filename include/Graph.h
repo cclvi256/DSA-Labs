@@ -82,7 +82,7 @@ struct Graph
 	/// @param arr 
 	/// @param visited 
 	/// @param mode From adjacency list or adjacency matrix?
-	void DFS_R_Numbering(int start, int* arr, bool* visited, char mode);
+	void DFS_R_Numbering(int start, int* arr, bool* visited, char mode, int& counter);
 
 	/// @brief Print the graph as vertex and edge collections.
 	void Print();
