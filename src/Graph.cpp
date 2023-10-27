@@ -282,56 +282,57 @@ int* Graph::BFS_Numbering(int start, char mode)
 int* Graph::DFS_Numbering(int start, char mode)
 {
 	std::stack<int> s;
-
-	// Optimise: one bit for a true or false.
 	bool* visited = new bool[this->order];
 	int* rv = new int[this->order];
-
-	// Initialise array.
-	for (int i = 0; i < this->order; i++)
-	{
-		visited[i] = false;
-		rv[i] = 0;
-	}
-
-	s.push(start);
+	
 	visited[start] = true;
-	int counter = 1;
+	s.push(start);
 	rv[start] = 1;
+	int counter = 1;
 
 	while (!s.empty())
 	{
-		int topCopy = s.top();
-		s.pop();
+		bool fullLoaded = true;
+		int cur = s.top();
 
 		if (mode == 'l')
 		{
-			VNode* copy = this->adjList[topCopy].next;
+			VNode* copy = this->adjList[s.top()].next;
+
 			while (copy != nullptr)
 			{
 				if (!visited[copy->sn])
 				{
-					counter++;
-					rv[copy->sn] = counter;
 					s.push(copy->sn);
 					visited[copy->sn] = true;
+					counter++;
+					rv[copy->sn] = counter;
+					fullLoaded = false;
+					break;
 				}
+
 				copy = copy->next;
 			}
 		}
 		else if (mode == 'm')
 		{
-			for (int i = 0; i < this->order; i++)
+			for (int i = 0, base = cur * this->order; i < this->order; i++)
 			{
-				int base = this->order * topCopy;
 				if (this->adjMat[base + i] == 1 && !visited[i])
 				{
-					counter++;
-					rv[i] = counter;
 					s.push(i);
 					visited[i] = true;
+					counter++;
+					rv[i] = counter;
+					fullLoaded = false;
+					break;
 				}
 			}
+		}
+
+		if (fullLoaded)
+		{
+			s.pop();
 		}
 	}
 
@@ -356,11 +357,11 @@ void Graph::DFS_R_Numbering(int start, int* arr, bool* visited, char mode, int& 
 {
 	counter++;
 	arr[start] = counter;
+	visited[start] = true;
 
 	if (mode == 'l')
 	{
 		VNode* copy = this->adjList[start].next;
-		visited[start] = true;
 
 		while (copy != nullptr)
 		{
@@ -374,11 +375,10 @@ void Graph::DFS_R_Numbering(int start, int* arr, bool* visited, char mode, int& 
 	else if (mode == 'm')
 	{
 		int base = this->order * start;
-		visited[start] = true;
 
 		for (int i = 0; i < this->order; i++)
 		{
-			if (!visited[i])
+			if (this->adjMat[base + i] == 1 && !visited[i])
 			{
 				DFS_R_Numbering(i, arr, visited, mode, counter);
 			}

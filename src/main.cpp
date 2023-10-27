@@ -34,21 +34,21 @@ int main(int argc, char** argv)
 	std::cout << std::endl << "Non-recursive DFS numbering results: " << std::endl;
 
 	arr = g.DFS_Numbering(0, 'm');
-	std::cout << "DFS numbering result(from adjacency matrix): ";
+	std::cout << "\tfrom adjacency matrix: ";
 	PrintArray(arr, g.order);
 
 	arr = g.DFS_Numbering(0, 'l');
-	std::cout << "DFS numbering result(from adjacency list): ";
+	std::cout << "\tfrom adjacency list: ";
 	PrintArray(arr, g.order);
 
 	std::cout << std::endl << "Recursive DFS numbering results: " << std::endl;
 
 	g.DFS_R_Numbering(0, arr, 'm');
-	std::cout << "DFS numbering result(from adjacency matrix): ";
+	std::cout << "\tfrom adjacency matrix: ";
 	PrintArray(arr, g.order);
 
 	g.DFS_R_Numbering(0, arr, 'l');
-	std::cout << "DFS numbering result(from adjacency list): ";
+	std::cout << "\tfrom adjacency list: ";
 	PrintArray(arr, g.order);
 
 	std::cout << std::endl << "Degree: ";
