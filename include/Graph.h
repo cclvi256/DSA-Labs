@@ -16,8 +16,7 @@ struct Graph
 
 	/* Functions */
 	
-	Graph RmEdges();
-	Graph Prim();
+	Graph Prim(int start);
 	Graph Kruskal();
 
 	/* Destructors */

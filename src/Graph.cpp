@@ -48,6 +48,101 @@ Graph::Graph(int order)
 	this->adjMat = new int[order * order];
 }
 
+Graph Graph::Prim(int start)
+{
+	bool* connected = new bool[this->order];
+	for (int i = 0; i < this->order; i++)
+	{
+		connected[i] = false;
+	}
+	Graph rg(this->order);
+	for (int i = 0; i < this->order * this->order; i++)
+	{
+		rg.adjMat[i] = INFINITY;
+	}
+
+	auto done = [connected, this]() -> bool
+	{
+		for (int i = 0; i < this->order; i++)
+		{
+			if (!connected[i])
+			{
+				return false;
+			}
+		}
+
+		return true;
+	};
+
+	auto nearest = [connected, this](int vertex) -> int
+	{
+		int base = vertex * this->order;
+		int min = this->adjMat[base];
+		int rv = 0;
+		bool flag = true;
+
+		for (int i = 0; i < this->order; i++)
+		{
+			if (vertex == i || connected[i])
+			{
+				continue;
+			}
+
+			if (flag)
+			{
+				rv = i;
+				min = this->adjMat[base + i];
+				flag = false;
+			}
+			else if (min > this->adjMat[base + i])
+			{
+				rv = i;
+				min = this->adjMat[base + i];
+			}
+
+		}
+
+		return flag ? -1 : rv;
+	};
+
+	connected[start] = true;
+
+	while (!done())
+	{
+		int minV1, minV2, minW;
+		bool flag = true;
+		for (int i = 0; i < this->order; i++)
+		{
+			if (int t=nearest(i);connected[i] && t >= 0)
+			{
+				if (flag)
+				{
+					minV1 = i;
+					minV2 = t;
+					minW = this->adjMat[i * this->order + minV2];
+				}
+				else if (this->adjMat[i * this->order + t] < minW)
+				{
+					minV1 = i;
+					minV2 = t;
+					minW = this->adjMat[i * this->order + minV2];
+				}
+			}
+		}
+
+		connected[minV2] = true;
+		rg.adjMat[minV1 * rg.order + minV2] = minW;
+		rg.adjMat[minV2 * rg.order + minV1] = minW;
+	}
+
+	return rg;
+}
+
+Graph Graph::Kruskal()
+{
+	// TODO: Add return here
+}
+
 Graph::~Graph()
 {
 	delete[] this->adjMat;
