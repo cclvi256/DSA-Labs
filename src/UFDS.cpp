@@ -10,13 +10,38 @@ UFDS::UFDS(int cardinality, Elem* elements)
 	for (int i = 0; i < cardinality; i++)
 	{
 		sets[i].superset = nullptr;
-		this->elements[i].set = this->sets + i;
+		this->elements[i].master = this->sets + i;
 	}
+
+	setNum = cardinality;
 }
 
 void UFDS::Union(Set* root1, Set* root2)
 {
 	root2->superset = root1;
+}
+
+void UFDS::Union(Elem* elem1, Elem* elem2)
+{
+	Find(*elem2)->superset = Find(*elem1);
+	if (Find(*elem1) != Find(*elem2))
+	{
+		this->setNum--;
+	}
+}
+
+void UFDS::Union(Elem& elem1, Elem& elem2)
+{
+	Find(elem2)->superset = Find(elem1);
+	if (Find(elem1) != Find(elem2))
+	{
+		this->setNum--;
+	}
+}
+
+int UFDS::Parts()
+{
+	return this->setNum;
 }
 
 Set* UFDS::Find(Elem element)
@@ -30,13 +55,13 @@ Set* UFDS::Find(Elem element)
 		}
 	}
 
-	Set* root = elements[position].set;
+	Set* root = elements[position].master;
 
 	while (root->superset != nullptr)
 	{
 		root = root->superset;
 	}
-		// TODO: 在此处插入 return 语句
+
 	return root;
 }
 

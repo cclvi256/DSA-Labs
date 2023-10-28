@@ -113,7 +113,7 @@ Graph Graph::Prim(int start)
 		bool flag = true;
 		for (int i = 0; i < this->order; i++)
 		{
-			if (int t=nearest(i);connected[i] && t >= 0)
+			if (int t = nearest(i); connected[i] && t >= 0)
 			{
 				if (flag)
 				{
@@ -140,7 +140,36 @@ Graph Graph::Prim(int start)
 
 Graph Graph::Kruskal()
 {
-	// TODO: Add return here
+	int len = this->order * (this->order - 1) / 2;
+	int* edge = new int[len];
+	int* sn = new int[len];
+
+	for (int i = 0; i < this->order; i++)
+	{
+		for (int j = i + 1; j < this->order; j++)
+		{
+			edge[i * this->order + j] = this->adjMat[i * this->order + j];
+			sn[i * this->order + j] = i * this->order + j;
+		}
+	}
+
+	for (int i = 0; i < len - 1; i++)
+	{
+		for (int j = len - 1; j >= i; j--)
+		{
+			if (edge[i] > edge[i + 1])
+			{
+				int temp = edge[i];
+				edge[i] = edge[i + 1];
+				edge[i + 1] = temp;
+				temp = sn[i];
+				sn[i] = sn[i + 1];
+				sn[i + 1] = temp;
+			}
+		}
+	}
+
+	
 }
 
 Graph::~Graph()
