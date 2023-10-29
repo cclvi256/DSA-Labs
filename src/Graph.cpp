@@ -25,7 +25,10 @@ Graph::Graph()
 	while (flag)
 	{
 		char ch;
-		while (isspace(ch = cin.get()));
+		while (isspace(ch = cin.peek()))
+		{
+			cin.get();
+		}
 
 		if (ch == '#')
 		{
@@ -42,10 +45,61 @@ Graph::Graph()
 	}
 }
 
+Graph::Graph(std::string fileName)
+{
+	using namespace std;
+
+	ifstream ifs(fileName, std::ios::in);
+	if (!ifs.is_open())
+	{
+		cout << "Failed to open " << fileName;
+		cout << ", Please check whether the file exists." << endl;
+		exit(0);
+	}
+
+	ifs >> this->order;
+
+	this->adjMat = new int[this->order * this->order];
+
+	for (int i = 0; i < this->order * this->order; i++)
+	{
+		this->adjMat[i] = INFINITY;
+	}
+
+	bool flag = true;
+
+	while (flag)
+	{
+		char ch;
+		while (isspace(ch = ifs.peek()))
+		{
+			ifs.get();
+		}
+
+		if (ch == '#')
+		{
+			flag = false;
+		}
+		else
+		{
+			int v1, v2, weight;
+			ifs >> v1 >> v2 >> weight;
+
+			this->adjMat[v1 * this->order + v2] = weight;
+			this->adjMat[v2 * this->order + v1] = weight;
+		}
+	}
+}
+
 Graph::Graph(int order)
 {
 	this->order = order;
 	this->adjMat = new int[order * order];
+
+	for (int i = 0; i < this->order * this->order; i++)
+	{
+		this->adjMat[i] = INFINITY;
+	}
 }
 
 Graph Graph::Prim(int start)
@@ -56,10 +110,6 @@ Graph Graph::Prim(int start)
 		connected[i] = false;
 	}
 	Graph rg(this->order);
-	for (int i = 0; i < this->order * this->order; i++)
-	{
-		rg.adjMat[i] = INFINITY;
-	}
 
 	auto done = [connected, this]() -> bool
 	{
@@ -117,6 +167,7 @@ Graph Graph::Prim(int start)
 			{
 				if (flag)
 				{
+					flag = false;
 					minV1 = i;
 					minV2 = t;
 					minW = this->adjMat[i * this->order + minV2];
@@ -145,18 +196,18 @@ Graph Graph::Kruskal()
 	int* sn = new int[len];
 	Graph rg(this->order);
 
-	for (int i = 0; i < this->order; i++)
+	for (int i = 0, count = 0; i < this->order; i++)
 	{
-		for (int j = i + 1; j < this->order; j++)
+		for (int j = i + 1; j < this->order; j++, count++)
 		{
-			edge[i * this->order + j] = this->adjMat[i * this->order + j];
-			sn[i * this->order + j] = i * this->order + j;
+			edge[count] = this->adjMat[i * this->order + j];
+			sn[count] = i * this->order + j;
 		}
 	}
 
-	for (int i = 0; i < len - 1; i++)
+	for (int j = 0; j < len - 1; j++)
 	{
-		for (int j = len - 1; j >= i; j--)
+		for (int i = len - 1; i >= j; i--)
 		{
 			if (edge[i] > edge[i + 1])
 			{
@@ -170,22 +221,6 @@ Graph Graph::Kruskal()
 		}
 	}
 
-	// Elem* vertexes = new Elem[this->order];
-	// for (int i = 0; i < this->order; i++)
-	// {
-	// 	vertexes[i].value = i;
-	// }
-
-	// UFDS vSet(this->order, vertexes);
-
-	// for (int i = 0; i < len; i++)
-	// {
-	// 	int v1 = edge[i] / this->order;
-	// 	int v2 = edge[i] % this->order;
-
-		
-	// }
-
 	UFDS vSet(this->order);
 
 	for (int i = 0; i < len; i++)
@@ -196,10 +231,9 @@ Graph Graph::Kruskal()
 		if (vSet.Find(v1) != vSet.Find(v2))
 		{
 			vSet.Union(v1, v2);
+			rg.adjMat[v1 * rg.order + v2] = edge[i];
+			rg.adjMat[v2 * rg.order + v1] = edge[i];
 		}
-
-		rg.adjMat[v1 * rg.order + v2] = edge[i];
-		rg.adjMat[v2 * rg.order + v1] = edge[i];
 
 		if (vSet.Parts() == 1)
 		{
@@ -210,7 +244,46 @@ Graph Graph::Kruskal()
 	return rg;
 }
 
-Graph::~Graph()
+void Graph::Print()
 {
-	delete[] this->adjMat;
+	using namespace std;
+
+	bool first = true;
+	cout << "V = {";
+	for (int i = 0; i < this->order; i++)
+	{
+		if (first)
+		{
+			first = false;
+		}
+		else
+		{
+			cout << ", ";
+		}
+		cout << i;
+	}
+	cout << "};" << endl;
+
+	first = true;
+	cout << "E = {";
+	for (int i = 0; i < this->order; i++)
+	{
+		for (int j = i + 1; j < this->order; j++)
+		{
+			if (this->adjMat[i * this->order + j] < INFINITY)
+			{
+				if (first)
+				{
+					first = false;
+				}
+				else
+				{
+					cout << ", ";
+				}
+				cout << "(" << i << ", " << j << ")";
+				cout << " = " << adjMat[i * this->order + j];
+			}
+		}
+	}
+	cout << "}" << endl;
 }

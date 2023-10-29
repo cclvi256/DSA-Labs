@@ -1,5 +1,8 @@
 #include <iostream>
+#include <fstream>
 #include <cctype>
+#include <string>
+#include <cstdlib>
 #include "UFDS.h"
 #define INFINITY 65536
 
@@ -13,13 +16,12 @@ struct Graph
 	/* Constructors */
 
 	Graph();
+	Graph(std::string fileName);
 	Graph(int order);
 
 	/* Functions */
 	
 	Graph Prim(int start);
 	Graph Kruskal();
-
-	/* Destructors */
-	virtual ~Graph();
+	void Print();
 };
