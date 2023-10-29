@@ -6,26 +6,16 @@ struct Set
 	Set(Set* superset);
 };
 
-struct Elem
-{
-	int value;
-	Set* master;
-
-	const bool operator==(const Elem op2) const;
-};
-
 struct UFDS
 {
 	int cardinality;
-	Elem* elements;
-	Set* sets;
 	int setNum;
+	Set* sets;
 
-	UFDS(int cardinality, Elem* elements);
+	UFDS(int cardinality);
 
 	void Union(Set* root1, Set* root2);
-	void Union(Elem* elem1, Elem* elem2);
-	void Union(Elem& elem1, Elem& elem2);
+	void Union(int elem1, int elem2);
 	int Parts();
-	Set* Find(Elem element);
+	Set* Find(int element) const;
 };

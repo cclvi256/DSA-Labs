@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cctype>
+#include "UFDS.h"
 #define INFINITY 65536
 
 struct Graph

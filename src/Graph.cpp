@@ -143,6 +143,7 @@ Graph Graph::Kruskal()
 	int len = this->order * (this->order - 1) / 2;
 	int* edge = new int[len];
 	int* sn = new int[len];
+	Graph rg(this->order);
 
 	for (int i = 0; i < this->order; i++)
 	{
@@ -169,7 +170,44 @@ Graph Graph::Kruskal()
 		}
 	}
 
-	
+	// Elem* vertexes = new Elem[this->order];
+	// for (int i = 0; i < this->order; i++)
+	// {
+	// 	vertexes[i].value = i;
+	// }
+
+	// UFDS vSet(this->order, vertexes);
+
+	// for (int i = 0; i < len; i++)
+	// {
+	// 	int v1 = edge[i] / this->order;
+	// 	int v2 = edge[i] % this->order;
+
+		
+	// }
+
+	UFDS vSet(this->order);
+
+	for (int i = 0; i < len; i++)
+	{
+		int v1 = sn[i] / this->order;
+		int v2 = sn[i] % this->order;
+
+		if (vSet.Find(v1) != vSet.Find(v2))
+		{
+			vSet.Union(v1, v2);
+		}
+
+		rg.adjMat[v1 * rg.order + v2] = edge[i];
+		rg.adjMat[v2 * rg.order + v1] = edge[i];
+
+		if (vSet.Parts() == 1)
+		{
+			break;
+		}
+	}
+
+	return rg;
 }
 
 Graph::~Graph()
