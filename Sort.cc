@@ -4,16 +4,11 @@
 
 #include "Sort.h"
 
-namespace Sort
-{
-void bubbleSort(int* arr, int len)
-{
-  for (int i = 0; i < len - 1; i++)
-  {
-    for (int j = len - 1; j >= i; j++)
-    {
-      if (arr[j] < arr[j - 1])
-      {
+namespace Sort {
+void bubbleSort(int *arr, int len) {
+  for (int i = 0; i < len - 1; i++) {
+    for (int j = len - 1; j >= i; j++) {
+      if (arr[j] < arr[j - 1]) {
         int temp = arr[j];
         arr[j] = arr[j - 1];
         arr[j - 1] = temp;
@@ -22,34 +17,24 @@ void bubbleSort(int* arr, int len)
   }
 }
 
-void selectionSort(int* arr, int len)
-{
-}
+void selectionSort(int *arr, int len) {}
 
-void insertionSort(int* arr, int len)
-{
-}
+void insertionSort(int *arr, int len) {}
 
-void quickSort(int* arr, int len)
-{
-  if (len < 2)
-  {
+void quickSort(int *arr, int len) {
+  if (len < 2) {
     return;
   }
 
   int pivot = arr[0];
-  int* newArr = new int[len];
+  int *newArr = new int[len];
   int index1 = 0, index2 = len - 1;
 
-  for (int i = 1; i < len; i++)
-  {
-    if (arr[i] < pivot)
-    {
+  for (int i = 1; i < len; i++) {
+    if (arr[i] < pivot) {
       newArr[index1] = arr[i];
       ++index1;
-    }
-    else
-    {
+    } else {
       newArr[index2] = arr[i];
       --index2;
     }
@@ -57,8 +42,7 @@ void quickSort(int* arr, int len)
 
   newArr[index1] = pivot;
 
-  for (int i = 0; i < len; i++)
-  {
+  for (int i = 0; i < len; i++) {
     arr[i] = newArr[i];
   }
 
@@ -68,12 +52,43 @@ void quickSort(int* arr, int len)
   quickSort(arr + index1 + 1, len - index2 - 1);
 }
 
-void heapSort(int* arr, int len)
-{
+void mergeSort(int *arr, int len) {
+  int *newArr = new int[len];
+  for (int unitLen = 1; unitLen < len; unitLen *= 2) {
+    int parts = len / unitLen + len % unitLen ? 1 : 0;
+    int pairs = (parts + 1) / 2;
+
+    int index = 0;
+
+    for (int i = 0; i < pairs; ++i) {
+      int st1 = index;
+      int st2 = index + unitLen;
+
+      if (st2 >= len) {
+        break;
+      }
+
+      bool flag = true;
+      while (flag) {
+        if (arr[st1] < arr[st2]) {
+          newArr[index] = arr[st1];
+          ++st1;
+        } else {
+          newArr[index] = arr[st2];
+          ++st2;
+        }
+        ++index;
+
+        if (st1 >= unitLen || st2 > unitLen || index == len) {
+          flag = false;
+        }
+      }
+    }
+  }
 }
 
-void radixSort(int* arr, int len)
-{
-}
+void heapSort(int *arr, int len) {}
 
-}// namespace Sort
+void radixSort(int *arr, int len) {}
+
+} // namespace Sort
