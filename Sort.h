@@ -6,9 +6,8 @@
 #define SORTING_ALGORITHMS_SORTING_H
 
 
-class Sorting
+namespace Sort
 {
-public:
 	static void bubbleSort(int* arr, int len);
 
 	static void selectionSort(int* arr, int len);
@@ -22,9 +21,7 @@ public:
 	static void heapSort(int* arr, int len);
 
 	static void radixSort(int* arr, int len);
-
-	static void quickSort(int* arr, int start, int len);
-};
+}
 
 
 #endif //SORTING_ALGORITHMS_SORTING_H

@@ -3,6 +3,6 @@ project(SortingAlgorithms)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(SortingAlgorithms main.cpp
-        Sorting.cpp
-        Sorting.h)
+add_executable(SortingAlgorithms main.cc
+        Sort.cc
+        Sort.h)
