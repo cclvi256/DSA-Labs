@@ -4,7 +4,6 @@
 
 #include "Sort.h"
 
-namespace Sort {
 void selectionSort(int *arr, int len) {
   for (int i = 0; i < len - 1; i++) {
     int minIndex = i;
@@ -89,4 +88,3 @@ void mergeSort(int *arr, int len) {
 void heapSort(int *arr, int len) {}
 
 void radixSort(int *arr, int len) {}
-} // namespace Sort

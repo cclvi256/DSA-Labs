@@ -5,23 +5,18 @@
 #ifndef SORTING_ALGORITHMS_SORTING_H
 #define SORTING_ALGORITHMS_SORTING_H
 
+void bubbleSort(int *arr, int len);
 
-namespace Sort
-{
-	static void bubbleSort(int* arr, int len);
+void selectionSort(int *arr, int len);
 
-	static void selectionSort(int* arr, int len);
+void insertionSort(int *arr, int len);
 
-	static void insertionSort(int* arr, int len);
+void quickSort(int *arr, int len);
 
-	static void quickSort(int* arr, int len);
+void mergeSort(int *arr, int len);
 
-	static void mergeSort(int* arr, int len);
+void heapSort(int *arr, int len);
 
-	static void heapSort(int* arr, int len);
+void radixSort(int *arr, int len);
 
-	static void radixSort(int* arr, int len);
-}
-
-
-#endif //SORTING_ALGORITHMS_SORTING_H
+#endif // SORTING_ALGORITHMS_SORTING_H
