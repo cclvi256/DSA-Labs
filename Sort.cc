@@ -5,21 +5,20 @@
 #include "Sort.h"
 
 namespace Sort {
-void bubbleSort(int *arr, int len) {
+void selectionSort(int *arr, int len) {
   for (int i = 0; i < len - 1; i++) {
-    for (int j = len - 1; j >= i; j++) {
-      if (arr[j] < arr[j - 1]) {
-        int temp = arr[j];
-        arr[j] = arr[j - 1];
-        arr[j - 1] = temp;
+    int minIndex = i;
+    for (int j = i + 1; j < len; j++) {
+      if (arr[j] < arr[minIndex]) {
+        minIndex = j;
       }
     }
+
+    int temp = arr[i];
+    arr[i] = arr[minIndex];
+    arr[minIndex] = temp;
   }
 }
-
-void selectionSort(int *arr, int len) {}
-
-void insertionSort(int *arr, int len) {}
 
 void quickSort(int *arr, int len) {
   if (len < 2) {
@@ -90,5 +89,4 @@ void mergeSort(int *arr, int len) {
 void heapSort(int *arr, int len) {}
 
 void radixSort(int *arr, int len) {}
-
 } // namespace Sort
