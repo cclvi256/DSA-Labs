@@ -40,19 +40,24 @@ int main() {
     arrCopy[i] = arr[i];
   }
 #endif
+  print(arr, arrLen);
+  
   selectionSort(arr, arrLen);
+  print(arr, arrLen);
 
   for (int i = 0; i < arrLen; i++) {
     arr[i] = arrCopy[i];
   }
 
   quickSort(arr, arrLen);
+  print(arr, arrLen);
 
   for (int i = 0; i < arrLen; i++) {
     arr[i] = arrCopy[i];
   }
 
   mergeSort(arr, arrLen);
+  print(arr, arrLen);
 
   return 0;
 }

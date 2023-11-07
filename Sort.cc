@@ -3,6 +3,7 @@
 //
 
 #include "Sort.h"
+#include <iostream>
 
 void selectionSort(int *arr, int len) {
   for (int i = 0; i < len - 1; i++) {
@@ -50,41 +51,66 @@ void quickSort(int *arr, int len) {
   quickSort(arr + index1 + 1, len - index2 - 1);
 }
 
-void mergeSort(int *arr, int len) {
-  int *newArr = new int[len];
-  for (int unitLen = 1; unitLen < len; unitLen *= 2) {
-    int parts = len / unitLen + len % unitLen ? 1 : 0;
-    int pairs = (parts + 1) / 2;
-
-    int index = 0;
-
-    for (int i = 0; i < pairs; ++i) {
-      int st1 = index;
-      int st2 = index + unitLen;
-
-      if (st2 >= len) {
-        break;
-      }
-
-      bool flag = true;
-      while (flag) {
-        if (arr[st1] < arr[st2]) {
-          newArr[index] = arr[st1];
-          ++st1;
-        } else {
-          newArr[index] = arr[st2];
-          ++st2;
-        }
-        ++index;
-
-        if (st1 >= unitLen || st2 > unitLen || index == len) {
-          flag = false;
-        }
-      }
-    }
-  }
-}
+void mergeSort(int *arr, int len) { mergeSort(arr, len, 1); }
 
 void heapSort(int *arr, int len) {}
 
 void radixSort(int *arr, int len) {}
+
+void print(int *arr, int len) {
+  for (int i = 0; i < len; i++) {
+    std::cout << arr[i] << ' ';
+  }
+  std::cout << std::endl;
+}
+
+void mergeSort(int *arr, int n, int unit) {
+  if (unit >= n) {
+    return;
+  }
+
+  int *newArr = new int[n];
+
+  int index = 0;
+
+  for (int i = 0; i < n; i += 2 * unit) {
+    if (i + unit >= n) {
+      break;
+    }
+
+    int c1 = 0, c2 = 0;
+    while (c1 < unit || (c2 < unit && i + unit + c2 < n)) {
+      if (c1 == unit) {
+        newArr[index] = arr[i + unit + c2];
+        c2++;
+      }
+
+      else if (c2 == unit || i + unit + c2 >= n) {
+        newArr[index] = arr[i + c1];
+        c1++;
+      }
+
+      else if (arr[i + c1] < arr[i + unit + c2]) {
+        newArr[index] = arr[i + c1];
+        c1++;
+      }
+
+      else {
+        newArr[index] = arr[i + unit + c2];
+        c2++;
+      }
+
+      index++;
+    }
+  }
+
+  for (int i = 0; i < index; i++) {
+    arr[i] = newArr[i];
+  }
+
+  delete[] newArr;
+  newArr = nullptr;
+
+  unit *= 2;
+  mergeSort(arr, n, unit);
+}

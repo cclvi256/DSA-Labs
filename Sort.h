@@ -15,8 +15,12 @@ void quickSort(int *arr, int len);
 
 void mergeSort(int *arr, int len);
 
+void mergeSort(int *arr, int n, int unit);
+
 void heapSort(int *arr, int len);
 
 void radixSort(int *arr, int len);
+
+void print(int *arr, int len);
 
 #endif // SORTING_ALGORITHMS_SORTING_H
