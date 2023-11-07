@@ -12,7 +12,7 @@
 int main(int argc, char **argv) {
   using namespace std;
 
-  if (argc == 2 && strcmp(argv[1], "-c")) {
+  if (argc == 2 && strcmp(argv[1], "-c") == 0) {
     cout << "Sorting Algorithms." << endl;
     cout << "1: Sorting data from user." << endl;
 
@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
     print(arr, arrLen);
   }
 
-  else if (argc == 1 || (argc == 2 && strcmp(argv[1], "-t"))) {
+  else if (argc == 1 || (argc == 2 && strcmp(argv[1], "-t") == 0)) {
     cout << "2: Sorting speed comparison.";
     cout << "Enter parameters: Data scale, Repeating times, Algorithm" << endl;
     cout << "q for quick sort, m for merge sort, s for selection sort" << endl;
