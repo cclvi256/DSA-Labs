@@ -117,5 +117,66 @@ int main(int argc, char **argv) {
     cout << "Time consumption: " << duration.count() << " microseconds" << endl;
   }
 
+  else if (argc == 4) {
+    string dataScaleS = argv[1];
+    string repeatS = argv[2];
+    string algorithmS = argv[3];
+    int dataScale = stoi(dataScaleS);
+    int repeat = stoi(repeatS);
+    char algorithm = algorithmS[0];
+
+    int **arrSet = new int *[repeat];
+
+    for (int i = 0; i < repeat; i++) {
+      arrSet[i] = new int[dataScale];
+    }
+
+    auto seed = chrono::system_clock::now().time_since_epoch().count();
+
+    std::default_random_engine e(seed);
+    std::uniform_int_distribution<int> u(0, 2147483647);
+
+    for (int i = 0; i < dataScale; i++) {
+      for (int j = 0; j < repeat; j++) {
+        arrSet[j][i] = u(e);
+      }
+    }
+
+    auto start = chrono::system_clock::now();
+
+    switch (algorithm) {
+    case 'q':
+      for (int i = 0; i < repeat; i++) {
+        quickSort(arrSet[i], dataScale);
+      }
+      break;
+    case 'm':
+      for (int i = 0; i < repeat; i++) {
+        mergeSort(arrSet[i], dataScale);
+      }
+      break;
+    case 's':
+      for (int i = 0; i < repeat; i++) {
+        selectionSort(arrSet[i], dataScale);
+      }
+      break;
+    default:
+      cout << "Invalid algorithm.";
+      break;
+    }
+
+    auto end = chrono::system_clock::now();
+    auto duration =
+        duration_cast<chrono::microseconds>((end - start) * (1.0 / repeat));
+
+    for (int i = 0; i < repeat; i++) {
+      delete[] arrSet[i];
+    }
+
+    delete[] arrSet;
+
+    cout << "Time consumption: " << duration.count() << " microseconds" << endl;
+  }
+
   return 0;
 }
