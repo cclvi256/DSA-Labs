@@ -190,7 +190,12 @@ int main(int argc, char **argv) {
 
     delete[] arrSet;
 
-    cout << "Time consumption: " << duration.count() << " microseconds" << endl;
+    cout << "Size: ";
+    cout.width(12);
+    cout << dataScale;
+    cout << "Time: ";
+    cout.width(12);
+    cout << duration.count() << " microseconds" << endl;
   }
 
   return 0;
