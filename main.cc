@@ -193,7 +193,7 @@ int main(int argc, char **argv) {
     cout << "Size: ";
     cout.width(12);
     cout << dataScale;
-    cout << "Time: ";
+    cout << "\t\tTime: ";
     cout.width(12);
     cout << duration.count() << " microseconds" << endl;
   }
