@@ -6,9 +6,9 @@
 #include <iostream>
 
 void selectionSort(int *arr, int len) {
-  for (int i = 0; i < len - 1; i++) {
+  for (int i = 0; i < len - 1; ++i) {
     int minIndex = i;
-    for (int j = i + 1; j < len; j++) {
+    for (int j = i + 1; j < len; ++j) {
       if (arr[j] < arr[minIndex]) {
         minIndex = j;
       }
@@ -29,7 +29,7 @@ void quickSort(int *arr, int len) {
   int *newArr = new int[len];
   int index1 = 0, index2 = len - 1;
 
-  for (int i = 1; i < len; i++) {
+  for (int i = 1; i < len; ++i) {
     if (arr[i] < pivot) {
       newArr[index1] = arr[i];
       ++index1;
@@ -41,7 +41,7 @@ void quickSort(int *arr, int len) {
 
   newArr[index1] = pivot;
 
-  for (int i = 0; i < len; i++) {
+  for (int i = 0; i < len; ++i) {
     arr[i] = newArr[i];
   }
 
@@ -56,7 +56,7 @@ void heapSort(int *arr, int len) {}
 void radixSort(int *arr, int len) {}
 
 void print(int *arr, int len) {
-  for (int i = 0; i < len; i++) {
+  for (int i = 0; i < len; ++i) {
     std::cout << arr[i] << ' ';
   }
   std::cout << std::endl;
@@ -77,29 +77,29 @@ void mergeSort(int *arr, int len) {
       while (c1 < unit || (c2 < unit && i + unit + c2 < len)) {
         if (c1 == unit) {
           newArr[index] = arr[i + unit + c2];
-          c2++;
+          ++c2;
         }
 
         else if (c2 == unit || i + unit + c2 >= len) {
           newArr[index] = arr[i + c1];
-          c1++;
+          ++c1;
         }
 
         else if (arr[i + c1] < arr[i + unit + c2]) {
           newArr[index] = arr[i + c1];
-          c1++;
+          ++c1;
         }
 
         else {
           newArr[index] = arr[i + unit + c2];
-          c2++;
+          ++c2;
         }
 
-        index++;
+        ++index;
       }
     }
 
-    for (int i = 0; i < index; i++) {
+    for (int i = 0; i < index; ++i) {
       arr[i] = newArr[i];
     }
 

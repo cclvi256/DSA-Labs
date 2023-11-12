@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
     int *arr = new int[arrLen];
     int *arrCopy = new int[arrLen];
 
-    for (int i = 0; i < arrLen; i++) {
+    for (int i = 0; i < arrLen; ++i) {
       ifs >> arr[i];
       arrCopy[i] = arr[i];
     }
@@ -35,25 +35,40 @@ int main(int argc, char **argv) {
     cout << "The initial array is: ";
     print(arr, arrLen);
 
+    auto startS = chrono::system_clock::now();
     selectionSort(arr, arrLen);
+    auto endS = chrono::system_clock::now();
+    auto durS = chrono::duration_cast<chrono::microseconds>(endS - startS);
+
     cout << "Sorted by selection sort: ";
     print(arr, arrLen);
+    cout << "Time consumption: " << durS.count() << " microseconds" << endl;
 
-    for (int i = 0; i < arrLen; i++) {
+    for (int i = 0; i < arrLen; ++i) {
       arr[i] = arrCopy[i];
     }
+
+    auto startQ = chrono::system_clock::now();
+    quickSort(arr, arrLen);
+    auto endQ = chrono::system_clock::now();
+    auto durQ = chrono::duration_cast<chrono::microseconds>(endQ - startQ);
 
     cout << "Sorted by quick sort: ";
-    quickSort(arr, arrLen);
     print(arr, arrLen);
+    cout << "Time consumption: " << durQ.count() << " microseconds" << endl;
 
-    for (int i = 0; i < arrLen; i++) {
+    for (int i = 0; i < arrLen; ++i) {
       arr[i] = arrCopy[i];
     }
 
-    cout << "Sorted by merge sort: ";
+    auto startM = chrono::system_clock::now();
     mergeSort(arr, arrLen);
+    auto endM = chrono::system_clock::now();
+    auto durM = chrono::duration_cast<chrono::microseconds>(endM - startM);
+
+    cout << "Sorted by merge sort: ";
     print(arr, arrLen);
+    cout << "Time consumption: " << durM.count() << " microseconds" << endl;
   }
 
   else if (argc == 1 || (argc == 2 && strcmp(argv[1], "-t") == 0)) {
@@ -66,7 +81,7 @@ int main(int argc, char **argv) {
     cin >> dataScale >> repeat >> algorithm;
     int **arrSet = new int *[repeat];
 
-    for (int i = 0; i < repeat; i++) {
+    for (int i = 0; i < repeat; ++i) {
       arrSet[i] = new int[dataScale];
     }
 
@@ -75,8 +90,8 @@ int main(int argc, char **argv) {
     std::default_random_engine e(seed);
     std::uniform_int_distribution<int> u(0, 2147483647);
 
-    for (int i = 0; i < dataScale; i++) {
-      for (int j = 0; j < repeat; j++) {
+    for (int i = 0; i < dataScale; ++i) {
+      for (int j = 0; j < repeat; ++j) {
         arrSet[j][i] = u(e);
       }
     }
@@ -85,17 +100,17 @@ int main(int argc, char **argv) {
 
     switch (algorithm) {
     case 'q':
-      for (int i = 0; i < repeat; i++) {
+      for (int i = 0; i < repeat; ++i) {
         quickSort(arrSet[i], dataScale);
       }
       break;
     case 'm':
-      for (int i = 0; i < repeat; i++) {
+      for (int i = 0; i < repeat; ++i) {
         mergeSort(arrSet[i], dataScale);
       }
       break;
     case 's':
-      for (int i = 0; i < repeat; i++) {
+      for (int i = 0; i < repeat; ++i) {
         selectionSort(arrSet[i], dataScale);
       }
       break;
@@ -108,7 +123,7 @@ int main(int argc, char **argv) {
     auto duration =
         duration_cast<chrono::microseconds>((end - start) * (1.0 / repeat));
 
-    for (int i = 0; i < repeat; i++) {
+    for (int i = 0; i < repeat; ++i) {
       delete[] arrSet[i];
     }
 
@@ -127,7 +142,7 @@ int main(int argc, char **argv) {
 
     int **arrSet = new int *[repeat];
 
-    for (int i = 0; i < repeat; i++) {
+    for (int i = 0; i < repeat; ++i) {
       arrSet[i] = new int[dataScale];
     }
 
@@ -136,8 +151,8 @@ int main(int argc, char **argv) {
     std::default_random_engine e(seed);
     std::uniform_int_distribution<int> u(0, 2147483647);
 
-    for (int i = 0; i < dataScale; i++) {
-      for (int j = 0; j < repeat; j++) {
+    for (int i = 0; i < dataScale; ++i) {
+      for (int j = 0; j < repeat; ++j) {
         arrSet[j][i] = u(e);
       }
     }
@@ -146,17 +161,17 @@ int main(int argc, char **argv) {
 
     switch (algorithm) {
     case 'q':
-      for (int i = 0; i < repeat; i++) {
+      for (int i = 0; i < repeat; ++i) {
         quickSort(arrSet[i], dataScale);
       }
       break;
     case 'm':
-      for (int i = 0; i < repeat; i++) {
+      for (int i = 0; i < repeat; ++i) {
         mergeSort(arrSet[i], dataScale);
       }
       break;
     case 's':
-      for (int i = 0; i < repeat; i++) {
+      for (int i = 0; i < repeat; ++i) {
         selectionSort(arrSet[i], dataScale);
       }
       break;
@@ -169,7 +184,7 @@ int main(int argc, char **argv) {
     auto duration =
         duration_cast<chrono::microseconds>((end - start) * (1.0 / repeat));
 
-    for (int i = 0; i < repeat; i++) {
+    for (int i = 0; i < repeat; ++i) {
       delete[] arrSet[i];
     }
 
